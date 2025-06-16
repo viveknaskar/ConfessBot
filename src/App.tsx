@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Heart, Volume2, MessageSquare, Zap, AlertCircle } from 'lucide-react';
+import { Heart, Volume2, MessageSquare, Zap, AlertCircle, Sparkles } from 'lucide-react';
 import { generateSpeech, VOICE_MAPPINGS } from './services/elevenlabs';
-import { generateRoast } from './services/openai';
+import { generateRoast, generateNarratorResponse } from './services/openai';
 import { AudioPlayer } from './components/AudioPlayer';
 
 interface Confession {
@@ -50,10 +50,12 @@ function App() {
   const [confession, setConfession] = useState('');
   const [selectedVoice, setSelectedVoice] = useState(VOICES[0].id);
   const [roastMe, setRoastMe] = useState(false);
+  const [narratorResponse, setNarratorResponse] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [confessionAudio, setConfessionAudio] = useState<string | null>(null);
   const [roastAudio, setRoastAudio] = useState<string | null>(null);
   const [roastText, setRoastText] = useState<string>('');
+  const [narratorText, setNarratorText] = useState<string>('');
   const [confessions, setConfessions] = useState<Confession[]>(SAMPLE_CONFESSIONS);
   const [error, setError] = useState<string | null>(null);
   const [justGenerated, setJustGenerated] = useState(false);
@@ -66,12 +68,24 @@ function App() {
     setConfessionAudio(null);
     setRoastAudio(null);
     setRoastText('');
+    setNarratorText('');
     setJustGenerated(false);
     
     try {
-      // Generate confession audio
+      const selectedVoiceData = VOICES.find(v => v.id === selectedVoice);
       const voiceId = VOICE_MAPPINGS[selectedVoice];
-      const audioUrl = await generateSpeech(confession, voiceId);
+      
+      let textToSpeak = confession;
+      
+      // Generate narrator response if enabled
+      if (narratorResponse && selectedVoiceData) {
+        const response = await generateNarratorResponse(confession, selectedVoiceData.name);
+        setNarratorText(response);
+        textToSpeak = response; // The narrator responds instead of just reading the confession
+      }
+      
+      // Generate confession audio with narrator response or original confession
+      const audioUrl = await generateSpeech(textToSpeak, voiceId);
       setConfessionAudio(audioUrl);
       setJustGenerated(true);
       
@@ -93,7 +107,7 @@ function App() {
       const newConfession: Confession = {
         id: Date.now().toString(),
         text: confession,
-        voice: VOICES.find(v => v.id === selectedVoice)?.name || 'Unknown',
+        voice: selectedVoiceData?.name || 'Unknown',
         likes: 0,
         audioUrl: audioUrl,
         timestamp: new Date(),
@@ -183,6 +197,31 @@ function App() {
                 </select>
               </div>
 
+              {/* Narrator Response Toggle */}
+              <div className="flex items-center justify-between bg-gray-700/30 rounded-2xl p-4">
+                <div>
+                  <span className="text-white font-semibold text-lg">
+                    <Sparkles className="inline mr-2" size={20} />
+                    Interactive Response ✨
+                  </span>
+                  <p className="text-gray-400 text-sm mt-1">
+                    Let the narrator respond to your confession in their personality
+                  </p>
+                </div>
+                <button
+                  onClick={() => setNarratorResponse(!narratorResponse)}
+                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                    narratorResponse ? 'bg-gradient-to-r from-cyan-500 to-purple-500' : 'bg-gray-600'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
+                      narratorResponse ? 'translate-x-7' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+
               {/* Roast Toggle */}
               <div className="flex items-center justify-between bg-gray-700/30 rounded-2xl p-4">
                 <div>
@@ -222,7 +261,7 @@ function App() {
                 ) : (
                   <>
                     <Volume2 className="inline mr-2" size={24} />
-                    Generate Voice 🎵
+                    {narratorResponse ? 'Get Response 🎵' : 'Generate Voice 🎵'}
                   </>
                 )}
               </button>
@@ -233,23 +272,35 @@ function App() {
           {(confessionAudio || roastAudio) && (
             <div className="mt-8 space-y-4">
               {confessionAudio && (
-                <AudioPlayer
-                  audioUrl={confessionAudio}
-                  title={`🎭 Your Confession`}
-                  voice={selectedVoiceData?.name}
-                  color="purple"
-                  autoPlay={justGenerated}
-                />
+                <div className="space-y-3">
+                  <AudioPlayer
+                    audioUrl={confessionAudio}
+                    title={narratorResponse ? `🎭 ${selectedVoiceData?.name} Responds` : `🎭 Your Confession`}
+                    voice={selectedVoiceData?.name}
+                    color="purple"
+                    autoPlay={justGenerated}
+                  />
+                  {narratorText && (
+                    <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-4 border border-gray-700/50">
+                      <p className="text-gray-300 italic">"{narratorText}"</p>
+                    </div>
+                  )}
+                </div>
               )}
 
               {roastAudio && roastText && (
-                <AudioPlayer
-                  audioUrl={roastAudio}
-                  title="🔥 AI Roast"
-                  voice="Random Voice"
-                  color="pink"
-                  autoPlay={false}
-                />
+                <div className="space-y-3">
+                  <AudioPlayer
+                    audioUrl={roastAudio}
+                    title="🔥 AI Roast"
+                    voice="Random Voice"
+                    color="pink"
+                    autoPlay={false}
+                  />
+                  <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-4 border border-gray-700/50">
+                    <p className="text-gray-300 italic">"{roastText}"</p>
+                  </div>
+                </div>
               )}
             </div>
           )}
