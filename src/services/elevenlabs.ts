@@ -1,7 +1,4 @@
-const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
-const ELEVENLABS_BASE_URL = 'https://api.elevenlabs.io/v1';
-
-// Voice ID mappings for ElevenLabs
+// Updated ElevenLabs service to use backend function
 export const VOICE_MAPPINGS: Record<string, string> = {
   'morgan-freeman': 'GBv7mTt0atIp3Br8iCZE', // Thomas - deep, authoritative
   'donald-trump': 'VR6AewLTigWG4xSOukaG', // Antoni - confident, bold
@@ -11,41 +8,41 @@ export const VOICE_MAPPINGS: Record<string, string> = {
   'mrbeast': 'pNInz6obpgDQGcFmaJgB', // Adam - energetic, young
 };
 
-export interface ElevenLabsResponse {
-  audio: ArrayBuffer;
+interface VoiceResponse {
+  audioBase64?: string;
+  mimeType?: string;
+  error?: boolean;
+  message?: string;
 }
 
 export async function generateSpeech(text: string, voiceId: string): Promise<string> {
-  if (!ELEVENLABS_API_KEY || ELEVENLABS_API_KEY === 'YOUR_ELEVENLABS_API_KEY') {
-    throw new Error('ElevenLabs API key not configured. Please add your API key to the .env.local file.');
-  }
-
   try {
-    const response = await fetch(`${ELEVENLABS_BASE_URL}/text-to-speech/${voiceId}`, {
+    // Call our backend function instead of directly calling ElevenLabs
+    const response = await fetch('/api/generate-voice', {
       method: 'POST',
       headers: {
-        'Accept': 'audio/mpeg',
         'Content-Type': 'application/json',
-        'xi-api-key': ELEVENLABS_API_KEY,
       },
       body: JSON.stringify({
-        text: text,
-        model_id: 'eleven_monolingual_v1',
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.5,
-          style: 0.0,
-          use_speaker_boost: true,
-        },
+        text,
+        voiceId,
       }),
     });
 
-    if (!response.ok) {
-      throw new Error(`ElevenLabs API error: ${response.status} ${response.statusText}`);
+    const result: VoiceResponse = await response.json();
+
+    if (result.error) {
+      throw new Error(result.message || 'Unknown error occurred');
     }
 
-    const audioBuffer = await response.arrayBuffer();
-    const audioBlob = new Blob([audioBuffer], { type: 'audio/mpeg' });
+    if (!result.audioBase64 || !result.mimeType) {
+      throw new Error('Invalid response from voice generation service');
+    }
+
+    // Convert base64 to blob URL for audio playback
+    const audioData = `data:${result.mimeType};base64,${result.audioBase64}`;
+    const response2 = await fetch(audioData);
+    const audioBlob = await response2.blob();
     const audioUrl = URL.createObjectURL(audioBlob);
     
     return audioUrl;
@@ -55,26 +52,8 @@ export async function generateSpeech(text: string, voiceId: string): Promise<str
   }
 }
 
+// Keep the getAvailableVoices function for potential future use
 export async function getAvailableVoices() {
-  if (!ELEVENLABS_API_KEY || ELEVENLABS_API_KEY === 'YOUR_ELEVENLABS_API_KEY') {
-    throw new Error('ElevenLabs API key not configured. Please add your API key to the .env.local file.');
-  }
-
-  try {
-    const response = await fetch(`${ELEVENLABS_BASE_URL}/voices`, {
-      headers: {
-        'xi-api-key': ELEVENLABS_API_KEY,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`ElevenLabs API error: ${response.status} ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.voices;
-  } catch (error) {
-    console.error('Error fetching voices:', error);
-    throw error;
-  }
+  // This would need to be implemented as another backend function if needed
+  throw new Error('getAvailableVoices not implemented with backend function');
 }

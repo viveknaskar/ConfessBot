@@ -101,9 +101,9 @@ function App() {
       
       setConfessions(prev => [newConfession, ...prev]);
       
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error generating audio:', err);
-      setError('Failed to generate audio. Please check your API key and try again.');
+      setError(err.message || 'Failed to generate audio. Please try again.');
     } finally {
       setIsGenerating(false);
     }
