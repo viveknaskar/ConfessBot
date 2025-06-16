@@ -29,7 +29,19 @@ export async function generateSpeech(text: string, voiceId: string): Promise<str
       }),
     });
 
-    const result: VoiceResponse = await response.json();
+    // Check if the response is ok before attempting to parse JSON
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP ${response.status}: ${errorText || 'Unknown server error'}`);
+    }
+
+    let result: VoiceResponse;
+    try {
+      result = await response.json();
+    } catch (jsonError) {
+      const responseText = await response.text();
+      throw new Error(`Invalid JSON response: ${responseText}`);
+    }
 
     if (result.error) {
       throw new Error(result.message || 'Unknown error occurred');
