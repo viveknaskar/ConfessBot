@@ -87,7 +87,7 @@ Deno.serve(async (req: Request) => {
 
     // Convert audio buffer to base64
     const audioBuffer = await response.arrayBuffer();
-    const audioBase64 = btoa(new TextDecoder('latin1').decode(new Uint8Array(audioBuffer)));
+    const audioBase64 = btoa(String.fromCharCode(...new Uint8Array(audioBuffer)));
 
     const result: VoiceResponse = {
       audioBase64,
