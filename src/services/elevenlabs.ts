@@ -1,4 +1,4 @@
-// Updated ElevenLabs service to use backend function
+// Updated ElevenLabs service to use deployed Supabase edge function
 export const VOICE_MAPPINGS: Record<string, string> = {
   'morgan-freeman': 'GBv7mTt0atIp3Br8iCZE', // Thomas - deep, authoritative
   'donald-trump': 'VR6AewLTigWG4xSOukaG', // Antoni - confident, bold
@@ -17,10 +17,20 @@ interface VoiceResponse {
 
 export async function generateSpeech(text: string, voiceId: string): Promise<string> {
   try {
-    // Call our backend function instead of directly calling ElevenLabs
-    const response = await fetch('/api/generate-voice', {
+    // Use the deployed Supabase edge function URL
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Supabase configuration missing. Please set up your Supabase environment variables.');
+    }
+
+    const apiUrl = `${supabaseUrl}/functions/v1/generate-voice`;
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${supabaseAnonKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
