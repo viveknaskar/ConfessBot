@@ -1,4 +1,4 @@
-const ELEVENLABS_API_KEY = 'sk_8ea3051772a9ea762b5c43c9e18d5753f43761437bc51fc0';
+const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
 const ELEVENLABS_BASE_URL = 'https://api.elevenlabs.io/v1';
 
 // Voice ID mappings for ElevenLabs
@@ -16,6 +16,10 @@ export interface ElevenLabsResponse {
 }
 
 export async function generateSpeech(text: string, voiceId: string): Promise<string> {
+  if (!ELEVENLABS_API_KEY || ELEVENLABS_API_KEY === 'YOUR_ELEVENLABS_API_KEY') {
+    throw new Error('ElevenLabs API key not configured. Please add your API key to the .env.local file.');
+  }
+
   try {
     const response = await fetch(`${ELEVENLABS_BASE_URL}/text-to-speech/${voiceId}`, {
       method: 'POST',
@@ -52,6 +56,10 @@ export async function generateSpeech(text: string, voiceId: string): Promise<str
 }
 
 export async function getAvailableVoices() {
+  if (!ELEVENLABS_API_KEY || ELEVENLABS_API_KEY === 'YOUR_ELEVENLABS_API_KEY') {
+    throw new Error('ElevenLabs API key not configured. Please add your API key to the .env.local file.');
+  }
+
   try {
     const response = await fetch(`${ELEVENLABS_BASE_URL}/voices`, {
       headers: {
