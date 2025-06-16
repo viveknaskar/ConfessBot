@@ -1,5 +1,5 @@
 // OpenRouter integration for narrator responses and roast generation
-const OPENROUTER_API_KEY = ''; // Add your OpenRouter API key here
+const OPENROUTER_API_KEY = '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';
 
 export async function generateNarratorResponse(confession: string, narratorName: string): Promise<string> {
   if (!OPENROUTER_API_KEY) {
