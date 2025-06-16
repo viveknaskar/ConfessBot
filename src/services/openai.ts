@@ -1,9 +1,8 @@
-// OpenAI integration for narrator responses and roast generation
-// Note: You'll need to add your OpenAI API key here
-const OPENAI_API_KEY = ''; // Add your OpenAI API key here
+// OpenRouter integration for narrator responses and roast generation
+const OPENROUTER_API_KEY = ''; // Add your OpenRouter API key here
 
 export async function generateNarratorResponse(confession: string, narratorName: string): Promise<string> {
-  if (!OPENAI_API_KEY) {
+  if (!OPENROUTER_API_KEY) {
     // Fallback responses based on narrator personality
     const responses = {
       'Morgan Freeman': [
@@ -52,14 +51,16 @@ export async function generateNarratorResponse(confession: string, narratorName:
       'MrBeast': 'You are MrBeast. Respond to this confession with high energy, excitement, and maybe reference giving away money or creating a video about it. Use caps and exclamation points.'
     };
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'HTTP-Referer': window.location.origin,
+        'X-Title': 'ConfessBot'
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'anthropic/claude-3.5-sonnet',
         messages: [
           {
             role: 'system',
@@ -76,7 +77,8 @@ export async function generateNarratorResponse(confession: string, narratorName:
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`OpenRouter API error: ${response.status} ${response.statusText} - ${errorData.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
@@ -89,7 +91,7 @@ export async function generateNarratorResponse(confession: string, narratorName:
 }
 
 export async function generateRoast(confession: string): Promise<string> {
-  if (!OPENAI_API_KEY) {
+  if (!OPENROUTER_API_KEY) {
     // Fallback roasts for demo purposes
     const fallbackRoasts = [
       "Wow, that's so embarrassing even your FBI agent is cringing right now! 😬",
@@ -103,14 +105,16 @@ export async function generateRoast(confession: string): Promise<string> {
   }
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'HTTP-Referer': window.location.origin,
+        'X-Title': 'ConfessBot'
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'anthropic/claude-3.5-sonnet',
         messages: [
           {
             role: 'system',
@@ -127,7 +131,8 @@ export async function generateRoast(confession: string): Promise<string> {
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`OpenRouter API error: ${response.status} ${response.statusText} - ${errorData.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
@@ -135,7 +140,6 @@ export async function generateRoast(confession: string): Promise<string> {
   } catch (error) {
     console.error('Error generating roast:', error);
     // Return fallback roast on error
-    return "Your confession is so wild, even ChatGPT needs therapy after reading it! 🤖💭";
+    return "Your confession is so wild, even Claude needs therapy after reading it! 🤖💭";
   }
 }
-</parameter>
