@@ -16,6 +16,16 @@ interface VoiceResponse {
   message?: string;
 }
 
+// Utility function to sanitize text for ElevenLabs API
+function sanitizeText(text: string): string {
+  return text
+    .replace(/[^\x00-\xFF]/g, '')        // Remove non-Latin1 characters
+    .replace(/[\u2018\u2019]/g, "'")     // Curly apostrophes to straight
+    .replace(/[\u201C\u201D]/g, '"')     // Curly quotes to straight
+    .replace(/[\u2013\u2014]/g, '-')     // En/em dashes to hyphen
+    .replace(/[^\w\s.,!?'"()-]/g, '');   // Strip other funky symbols
+}
+
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -39,6 +49,22 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    // Sanitize the text before sending to ElevenLabs
+    const sanitizedText = sanitizeText(text);
+    
+    if (!sanitizedText.trim()) {
+      return new Response(
+        JSON.stringify({
+          error: true,
+          message: 'Text is empty after sanitization'
+        }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 400,
+        }
+      );
+    }
+
     // Get API key from environment
     const apiKey = Deno.env.get('ELEVENLABS_API_KEY');
     if (!apiKey) {
@@ -54,7 +80,7 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Make request to ElevenLabs API
+    // Make request to ElevenLabs API with sanitized text
     const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
       method: 'POST',
       headers: {
@@ -62,7 +88,7 @@ Deno.serve(async (req: Request) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        text: text,
+        text: sanitizedText, // Use sanitized text
         model_id: 'eleven_multilingual_v2',
         voice_settings: {
           stability: 0.5,

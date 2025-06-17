@@ -15,8 +15,25 @@ interface VoiceResponse {
   message?: string;
 }
 
+// Utility function to sanitize text for ElevenLabs API
+function sanitizeText(text: string): string {
+  return text
+    .replace(/[^\x00-\xFF]/g, '')        // Remove non-Latin1 characters
+    .replace(/[\u2018\u2019]/g, "'")     // Curly apostrophes to straight
+    .replace(/[\u201C\u201D]/g, '"')     // Curly quotes to straight
+    .replace(/[\u2013\u2014]/g, '-')     // En/em dashes to hyphen
+    .replace(/[^\w\s.,!?'"()-]/g, '');   // Strip other funky symbols
+}
+
 export async function generateSpeech(text: string, voiceId: string): Promise<string> {
   try {
+    // Sanitize the text before sending to API
+    const sanitizedText = sanitizeText(text);
+    
+    if (!sanitizedText.trim()) {
+      throw new Error('Text is empty after sanitization');
+    }
+
     // Use the deployed Supabase edge function URL
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -34,7 +51,7 @@ export async function generateSpeech(text: string, voiceId: string): Promise<str
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        text,
+        text: sanitizedText, // Use sanitized text
         voiceId,
       }),
     });
