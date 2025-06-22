@@ -133,7 +133,7 @@ export function AudioPlayer({
         <div>
           <h3 className="text-white font-semibold text-lg">{title}</h3>
           {voice && (
-            <p className="text-gray-400 text-sm">🎭 {voice}</p>
+            <p className="text-gray-400 text-sm">{voice}</p>
           )}
         </div>
         <div className="flex items-center space-x-2">

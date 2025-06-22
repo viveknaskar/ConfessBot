@@ -141,10 +141,10 @@ function App() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
           <h1 className="text-6xl font-black bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
-            ConfessBot 🤖
+            ConfessBot
           </h1>
           <p className="text-xl text-gray-300 font-medium">
-            Forgive me, Internet, for I have sinned... 😈
+            Forgive me, Internet, for I have sinned...
           </p>
         </div>
 
@@ -164,12 +164,12 @@ function App() {
               <div>
                 <label className="block text-white font-semibold mb-3 text-lg">
                   <MessageSquare className="inline mr-2" size={20} />
-                  Spill your secrets... 🗣️
+                  Spill your secrets...
                 </label>
                 <textarea
                   value={confession}
                   onChange={(e) => setConfession(e.target.value)}
-                  placeholder="Type your confession here... Don't worry, we won't judge... much 😏"
+                  placeholder="Type your confession here... Don't worry, we won't judge... much"
                   className="w-full h-32 bg-gray-700/50 border border-gray-600 rounded-2xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-lg"
                   maxLength={500}
                 />
@@ -182,7 +182,7 @@ function App() {
               <div>
                 <label className="block text-white font-semibold mb-3 text-lg">
                   <Volume2 className="inline mr-2" size={20} />
-                  Choose your narrator 🎭
+                  Choose your narrator
                 </label>
                 <select
                   value={selectedVoice}
@@ -202,7 +202,7 @@ function App() {
                 <div>
                   <span className="text-white font-semibold text-lg">
                     <Sparkles className="inline mr-2" size={20} />
-                    Interactive Response ✨
+                    Interactive Response
                   </span>
                   <p className="text-gray-400 text-sm mt-1">
                     Let the narrator respond to your confession in their personality
@@ -227,7 +227,7 @@ function App() {
                 <div>
                   <span className="text-white font-semibold text-lg">
                     <Zap className="inline mr-2" size={20} />
-                    Roast Me 🔥
+                    Roast Me
                   </span>
                   <p className="text-gray-400 text-sm mt-1">
                     Let AI roast your confession for extra spice
@@ -256,12 +256,12 @@ function App() {
                 {isGenerating ? (
                   <div className="flex items-center justify-center">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
-                    Generating Magic... ✨
+                    Generating Magic...
                   </div>
                 ) : (
                   <>
                     <Volume2 className="inline mr-2" size={24} />
-                    {narratorResponse ? 'Get Response 🎵' : 'Generate Voice 🎵'}
+                    {narratorResponse ? 'Get Response' : 'Generate Voice'}
                   </>
                 )}
               </button>
@@ -275,7 +275,7 @@ function App() {
                 <div className="space-y-3">
                   <AudioPlayer
                     audioUrl={confessionAudio}
-                    title={narratorResponse ? `🎭 ${selectedVoiceData?.name} Responds` : `🎭 Your Confession`}
+                    title={narratorResponse ? `${selectedVoiceData?.name} Responds` : `Your Confession`}
                     voice={selectedVoiceData?.name}
                     color="purple"
                     autoPlay={justGenerated}
@@ -292,7 +292,7 @@ function App() {
                 <div className="space-y-3">
                   <AudioPlayer
                     audioUrl={roastAudio}
-                    title="🔥 AI Roast"
+                    title="AI Roast"
                     voice="Random Voice"
                     color="pink"
                     autoPlay={false}
@@ -309,7 +309,7 @@ function App() {
         {/* Top Confessions */}
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-black text-white mb-8 text-center">
-            🏆 Top Confessions
+            Top Confessions
           </h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {confessions.map((conf) => (
@@ -322,7 +322,7 @@ function App() {
                 </p>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-purple-400 font-semibold text-sm">
-                    🎭 {conf.voice}
+                    {conf.voice}
                   </span>
                   {conf.audioUrl && (
                     <AudioPlayer
@@ -356,7 +356,7 @@ function App() {
           <div className="inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-lg rounded-full px-6 py-3 border border-gray-700/50">
             <span className="text-gray-400">Built on</span>
             <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold">
-              Bolt ⚡
+              Bolt
             </span>
           </div>
         </footer>
