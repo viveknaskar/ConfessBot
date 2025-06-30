@@ -26,6 +26,19 @@ function sanitizeText(text: string): string {
     .replace(/[^\w\s.,!?'"()-]/g, '');   // Strip other funky symbols
 }
 
+// Utility function to convert ArrayBuffer to base64
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binaryString = '';
+  
+  // Manually construct binary string to ensure Latin-1 compatibility
+  for (let i = 0; i < bytes.length; i++) {
+    binaryString += String.fromCharCode(bytes[i]);
+  }
+  
+  return btoa(binaryString);
+}
+
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -111,9 +124,9 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Convert audio buffer to base64
+    // Convert audio buffer to base64 using the fixed method
     const audioBuffer = await response.arrayBuffer();
-    const audioBase64 = btoa(new TextDecoder('latin1').decode(new Uint8Array(audioBuffer)));
+    const audioBase64 = arrayBufferToBase64(audioBuffer);
 
     const result: VoiceResponse = {
       audioBase64,
