@@ -353,11 +353,23 @@ function App() {
 
         {/* Footer */}
         <footer className="text-center mt-16 pb-8">
-          <div className="inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-lg rounded-full px-6 py-3 border border-gray-700/50">
-            <span className="text-gray-400">Built on</span>
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold">
-              Bolt
-            </span>
+          <div className="flex flex-col items-center space-y-6">
+            {/* Logo */}
+            <div className="w-20 h-20">
+              <img 
+                src="/black_circle_360x360.png" 
+                alt="ConfessBot Logo" 
+                className="w-full h-full object-contain"
+              />
+            </div>
+            
+            {/* Built on Bolt */}
+            <div className="inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-lg rounded-full px-6 py-3 border border-gray-700/50">
+              <span className="text-gray-400">Built on</span>
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-bold">
+                Bolt
+              </span>
+            </div>
           </div>
         </footer>
       </div>
