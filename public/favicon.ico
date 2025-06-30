@@ -1,15 +1,1 @@
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Simplified version for ICO -->
-  <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#ec4899"/>
-      <stop offset="50%" style="stop-color:#8b5cf6"/>
-      <stop offset="100%" style="stop-color:#06b6d4"/>
-    </linearGradient>
-  </defs>
-  
-  <circle cx="8" cy="8" r="7" fill="url(#bgGrad)"/>
-  <path d="M4 5 C4 4, 5 3, 6 3 L10 3 C11 3, 12 4, 12 5 L12 8 C12 9, 11 10, 10 10 L7 10 L5 12 L5 10 C4 10, 4 9, 4 8 Z" 
-        fill="white" opacity="0.9"/>
-  <text x="8" y="8.5" font-family="Arial" font-size="5" font-weight="bold" text-anchor="middle" fill="#1f2937">?</text>
-</svg>
+data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAABILAAASCwAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A7Pj/AOz4/wDs+P8A7Pj/AOz4/wDs+P8A7Pj/AOz4/wDs+P8A////AP///wD///8A////AP///wD///8A7Pj/AKzm/wBs2v8ALM//ACzP/wAs0P8ALM//ACzP/wBs2v8ArOb/AOz4/wD///8A////AP///8D///8A7Pj/AGza/wAs0P8A7Pj/AP///wD///8A////AP///wD///8A7Pj/ACzP/wBs2v8A7Pj/AP///wD///8A////AOz4/wAs0P8A7Pj/AP///wD///8A////AP///wD///8A////AP///wD///8A7Pj/ACzP/wDs+P8A////AP///wD///8A7Pj/ACzP/wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AACzP/wDs+P8A////AP///wD///8A7Pj/ACzP/wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AACzP/wDs+P8A////AP///wD///8A7Pj/ACzP/wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AACzP/wDs+P8A////AP///wD///8A7Pj/ACzP/wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AACzP/wDs+P8A////AP///wD///8A7Pj/ACzP/wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AACzP/wDs+P8A////AP///wD///8A7Pj/ACzP/wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AACzP/wDs+P8A////AP///wD///8A7Pj/ACzP/wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AACzP/wDs+P8A////AP///wD///8A7Pj/ACzP/wDs+P8A////AP///wD///8A////AP///wD///8A////AP///wD///8A7Pj/ACzP/wDs+P8A////AP///wD///8A7Pj/AGza/wAs0P8A7Pj/AP///wD///8A////AP///wD///8A7Pj/ACzP/wBs2v8A7Pj/AP///wD///8A////AP///wDs+P8ArOb/AGza/wAs0P8ALM//ACzP/wAs0P8ALM//AGza/wCs5v8A7Pj/AP///wD///8A////AP///wD///8A////AOz4/wDs+P8A7Pj/AOz4/wDs+P8A7Pj/AOz4/wDs+P8A7Pj/AOz4/wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
